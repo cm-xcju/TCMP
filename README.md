@@ -2,4 +2,26 @@
  Thanks for your stay in this repo.
  This project aims to pre-recognize the real-time emotion in multimodal conversation [paper](https://dl.acm.org/doi/10.1145/3583780.3615024)
 
-# 
+# 🔎 Motivation
+The objective is to predict the emotion of a forthcoming target
+utterance that is highly likely to occur. We believe that this task can
+enhance the dialogue system’s understanding of the interlocutor’s
+state of mind, enabling it to prepare an appropriate response in
+advance.
+
+# :⚙️ Installation
+Make sure the following dependencies are intalled.
+- python
+- pytorch
+- Numpy
+- tqdm
+- json
+- argparse
+- GTX
+
+## 💾 dataset
+- dataset 1
+- 2
+- 3
+
+## :fire
