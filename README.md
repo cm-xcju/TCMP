@@ -24,4 +24,26 @@ Make sure the following dependencies are intalled.
 - 2
 - 3
 
-## :fire
+## 🚀 Quick start
+There are [] steps for training.
+- First,
+- Second,
+- Third,
+- Finally,
+
+### Download 
+
+
+### step 2
+
+
+## 🏁 Experiment 
+
+
+## 📜Citation
+
+## 🤘Furthermore
+
+if your have any quesions, you can just propose the confusion in issue window. We are honored to disscuss the problem with you!
+
+Thanks~
