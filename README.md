@@ -9,7 +9,7 @@ enhance the dialogue system’s understanding of the interlocutor’s
 state of mind, enabling it to prepare an appropriate response in
 advance.
 
-# :⚙️ Installation
+# ⚙️ Installation
 Make sure the following dependencies are intalled.
 - python
 - pytorch
