@@ -11,18 +11,18 @@ advance.
 
 # ⚙️ Installation
 Make sure the following dependencies are intalled.
-- python
-- pytorch
-- Numpy
-- tqdm
-- json
-- argparse
-- GTX
+- python 3.6
+- pytorch 1.7
+- Numpy 1.19.2
+- tqdm 4.62.3
+- json 2.0.9
+- argparse 1.1
+
 
 ## 💾 dataset
 - dataset 1
-- 2
-- 3
+- dataset 2
+- dataset 3
 
 ## 🚀 Quick start
 There are [] steps for training.
