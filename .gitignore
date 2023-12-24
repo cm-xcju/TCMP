@@ -1,0 +1,9 @@
+# ignore all the data files 
+summary_pic
+snapshot_bert2_text2audio
+snapshot_bert2_text
+snapshot_bert2_audio
+snapshot_bert2
+EmotionCheckpoint
+__pycache__
+models/__pycache__

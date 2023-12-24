@@ -1,0 +1,247 @@
+"""
+Main function for emtion recognition
+date: 2020/09/24
+"""
+from ast import arg
+# from email import utils
+import os
+import argparse
+# from tkinter.messagebox import NO
+import Utils
+import Const
+# from Preprocess import Dictionary  # import the object for pickle loading
+# import Modules
+# from Modules import *
+from EmoTrain import emotrain, emoeval
+from datetime import datetime
+import time
+# str(datetime.now())
+# '2011-05-03 17:45:35.177000'
+from EmoTrain import Casestudy
+from config_args import config_pretrain_args, config_train_args
+import random
+import torch
+from torch import nn as nn
+import torch.optim as optim
+from torch.utils.tensorboard import SummaryWriter
+from models.main_model import TCMP
+import numpy as np
+
+def setup_seed(seed):
+    torch.manual_seed(seed)
+    torch.cuda.manual_seed_all(seed)
+    np.random.seed(seed)
+    random.seed(seed)
+    torch.backends.cudnn.deterministic = True
+
+
+def main():
+    '''Main function'''
+    args, pre_args = config_train_args()
+    # pre_args = config_pretrain_args()
+    # seed
+    setup_seed(args.seed)
+
+    # # load vocabs
+    # print("Loading vocabulary...")
+    # glob_vocab = Utils.loadFrPickle(args.vocab_path)
+    # print("Loading emotion label dict...")
+    # emodict = Utils.loadFrPickle(args.emodict_path)
+    # print("Loading review tr_emodict...")
+    # tr_emodict = Utils.loadFrPickle(args.tr_emodict_path)
+
+    # load field
+    print("Loading field...")
+
+    # field = Utils.loadFrPickle(args.data_path)
+    field = torch.load(args.data_path)
+    test_loader = field['test']
+
+    os.environ['CUDA_VISIBLE_DEVICES'] = args.gpu
+    # word embedding
+    print("Initializing word embeddings...")
+    # embedding = nn.Embedding(glob_vocab.n_words, args.d_word_vec, padding_idx=Const.PAD)
+    # if args.d_word_vec == 300:
+    #     if args.embedding != None and os.path.isfile(args.embedding):
+    #         np_embedding = Utils.loadFrPickle(args.embedding)
+    #     # else:
+    #     # 	np_embedding = Utils.load_pretrain(args.d_word_vec, glob_vocab, type='glove')
+    #     # 	Utils.saveToPickle(args.datasource+"/embedding.pt", np_embedding)
+    #     # 	embedding.weight.data.copy_(torch.from_numpy(np_embedding))
+    # if args.d_word_vec  !=300:
+    #     if args.embedding != None and os.path.isfile(args.embedding):
+    #         np_embedding = Utils.loadFrPickle(args.embedding)
+    #         embedding.weight.data.copy_(torch.from_numpy(np.array(np_embedding.weight.detach().numpy())))
+
+    # else:
+    # 	np_embedding = embedding
+    # 	Utils.saveToPickle(args.datasource+"/embedding.pt", embedding)
+    # embedding.max_norm = 1.0
+    # embedding.norm_type = 2.0
+    # embedding.weight.requires_grad = False
+
+    # word to vec
+    # wordenc = Modules.wordEncoder(embedding=embedding)
+    # # sent to vec
+
+    # # sentenc = Modules.sentEncoder(d_input=args.d_word_vec, d_output=args.d_hidden_low)
+    # # audioenc = Modules.sentEncoder(d_input=args.d_word_vec, d_output=args.d_hidden_low)
+    # if args.sentEnc == 'bigru2':
+    #     print("Utterance encoder: GRU2")
+    #     sentenc = Modules.sentGRUEncoder(d_input=args.d_word_vec, d_output=args.d_hidden_low)
+    #     audioenc = Modules.sentGRUEncoder(d_input=args.d_audio_vec, d_output=args.d_hidden_low)
+    # if args.layers == 2:
+    #     print("Number of stacked GRU layers: {}".format(args.layers))
+    #     sentenc = Modules.sentGRU2LEncoder(d_input=args.d_word_vec, d_output=args.d_hidden_low)
+
+    # if args.sentEnc == 'unigru2':
+    #     # enc
+    #     sentenc = Modules.sentGRUEncoder(d_input=args.d_word_vec, d_output=args.d_hidden_low)
+    #     audioenc = Modules.sentGRUEncoder(d_input=args.d_audio_vec, d_output=args.d_hidden_low)
+    #     # cont
+    #     contenc = Modules.unicontEncoder(d_input=args.d_hidden_low, d_output=args.d_hidden_up,bidirectional=True)
+    #     contAudenc = Modules.unicontEncoder(d_input=args.d_hidden_low, d_output=args.d_hidden_up,bidirectional=True)
+    #     #  dec
+    #     cmdec = Modules.uniLMDEC(d_input=args.d_hidden_up , d_output=args.d_hidden_low)
+    #     cmdecAud = Modules.uniLMDEC(d_input=args.d_hidden_up, d_output=args.d_hidden_low)
+    #     # cmdecA2T = Modules.uniCrossDEC(d_input=args.d_hidden_up, d_output=args.d_hidden_low)
+    #     # cmdecT2A = Modules.uniCrossDEC(d_input=args.d_hidden_up, d_output=args.d_hidden_low)
+    # if args.sentEnc =='trans':
+    #     # cont
+    #     sentenc = Modules.sentTransEncoder(d_input=args.d_word_vec, d_output=args.d_hidden_low)
+    #     audioenc = Modules.sentTransEncoder(d_input=args.d_audio_vec, d_output=args.d_hidden_low)
+    #     contenc = Modules.unicontEncoder(d_input=args.d_hidden_low, d_output=args.d_hidden_up,bidirectional=True)
+    #     contAudenc = Modules.unicontEncoder(d_input=args.d_hidden_low, d_output=args.d_hidden_up,bidirectional=True)
+    #     cmdec = Modules.uniLMDEC(d_input=args.d_hidden_up, d_output=args.d_hidden_low)
+    #     cmdecAud = Modules.uniLMDEC(d_input=args.d_hidden_up, d_output=args.d_hidden_low)
+    #     # cmdecA2T = Modules.uniCrossDEC(d_input=args.d_hidden_up, d_output=args.d_hidden_low)
+    #     # cmdecT2A = Modules.uniCrossDEC(d_input=args.d_hidden_up, d_output=args.d_hidden_low)
+    # # cont
+    # # contenc = Modules.contEncoder(d_input=args.d_hidden_low, d_output=args.d_hidden_up)
+    # # contAudenc = Modules.contEncoder(d_input=args.d_hidden_low, d_output=args.d_hidden_up)
+    # # decoder
+
+    # emodec = Modules.mlpMultiDecoder(d_input=args.d_hidden_low + args.d_hidden_up  , d_output=args.d_fc, n_class=emodict.n_words)
+    pre_model = None
+
+    if args.load_model:
+        print('Load in pretrained model...')
+        pre_model = torch.load(args.load_pretrain_model)  # need to be changed
+    weight = torch.from_numpy(Utils.loss_weight(field, args)).float()
+
+    criterion = nn.CrossEntropyLoss(weight=weight)
+    # criterion = nn.BCEWithLogitsLoss(weight=weight)
+    model = TCMP(args=args, pre_args=pre_args,
+                 pre_model=pre_model, criterion=criterion)
+    # weights  if need
+    # optimizer = optim.AdamW(model.parameters(), lr=args.lr)
+    optimizer, _ = Utils.prepare_optimizer_2(args, model)
+
+    # wordenc = torch.load("snapshot/wordenc_OpSub_"+str(args.d_hidden_low)+"_"+str(args.d_hidden_up)+".pt", map_location='cpu') #
+    # sentenc = torch.load("snapshot/sentenc_OpSub_"+str(args.d_hidden_low)+"_"+str(args.d_hidden_up)+".pt", map_location='cpu')
+    # contenc = torch.load("snapshot/contenc_OpSub_"+str(args.d_hidden_low)+"_"+str(args.d_hidden_up)+".pt", map_location='cpu')
+
+    # audioenc = torch.load("snapshot/audioenc_OpSub_"+str(args.d_audio_vec)+"_"+str(args.d_hidden_up)+".pt", map_location='cpu')
+    # contAudenc = torch.load("snapshot/contAudenc_OpSub_"+str(args.d_hidden_low)+"_"+str(args.d_hidden_up)+".pt", map_location='cpu')
+
+    # wordenc = torch.load(args.save_dir+"/wordenc_"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu') #
+    # sentenc = torch.load(args.save_dir+"/sentenc_"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+    # contenc = torch.load(args.save_dir+"/contenc_"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+    # cmdec = torch.load(args.save_dir+"/cmdec_"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+    # # cmdec = torch.load(args.save_dir+"/dec_OpSub.pt", map_location='cpu')
+
+    # audioenc = torch.load(args.save_dir+"/audioenc_"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+    # contAudenc = torch.load(args.save_dir+"/contAudenc_"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+    # cmdecAud = torch.load(args.save_dir+"/decAud_"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+
+    # wordenc = torch.load(args.save_dir+"/wordenc"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu') #
+    # sentenc = torch.load(args.save_dir+"/sentenc"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+    # contenc = torch.load(args.save_dir+"/contenc"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+    # cmdec = torch.load(args.save_dir+"/cmdec"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+    # # cmdec = torch.load(args.save_dir+"/dec_OpSub.pt", map_location='cpu')
+
+    # audioenc = torch.load(args.save_dir+"/audioenc"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+    # contAudenc = torch.load(args.save_dir+"/contAudenc"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+    # cmdecAud = torch.load(args.save_dir+"/decAud"+str(args.d_hidden_up)+"_"+str(args.d_hidden_low)+"_OpSub.pt", map_location='cpu')
+
+    # wordenc = torch.load(args.save_dir+"/wordenc_OpSub.pt", map_location='cpu') #
+    # sentenc = torch.load(args.save_dir+"/sentenc_OpSub.pt", map_location='cpu')
+    # contenc = torch.load(args.save_dir+"/contenc_OpSub.pt", map_location='cpu')
+    # cmdec = torch.load(args.save_dir+"/cmdec_OpSub.pt", map_location='cpu')
+    # # cmdec = torch.load(args.save_dir+"/dec_OpSub.pt", map_location='cpu')
+
+    # audioenc = torch.load(args.save_dir+"/audioenc_OpSub.pt", map_location='cpu')
+    # contAudenc = torch.load(args.save_dir+"/contAudenc_OpSub.pt", map_location='cpu')
+    # cmdecAud = torch.load(args.save_dir+"/decAud_OpSub.pt", map_location='cpu')
+
+    # freeze the pretrained parameters
+    # for p1 in wordenc.parameters():
+    #     p1.requires_grad = False
+
+    # Choose focused emotions
+    # focus_emo = Const.four_emo
+    focus_emo = args.focus_emo
+    args.decay = 0.75
+    # if args.dataset == 'IEMOCAP4v2':
+    #     focus_emo = Const.four_iem
+    #     args.decay = 0.95
+
+    # if args.dataset == 'MOSEI':
+    #     focus_emo = Const.six_mosei
+    # if args.dataset == 'MOSI':
+    #     focus_emo = Const.two_mosi
+    print("Focused emotion labels {}".format(focus_emo))
+
+    emotrain(model=model,
+             criterion=criterion,
+             optimizer=optimizer,
+             data_loader=field,
+             args=args)
+
+    # test
+    print("Load best models for testing!")
+
+    # wordenc = Utils.revmodel_loader(
+    #     args.save_model_path, 'wordenc', args.dataset, args.load_model)
+    # sentenc = Utils.revmodel_loader(
+    #     args.save_model_path, 'sentenc', args.dataset, args.load_model)
+    # contenc = Utils.revmodel_loader(
+    #     args.save_model_path, 'contenc', args.dataset, args.load_model)
+    # emodec = Utils.revmodel_loader(
+    #     args.save_model_path, 'dec', args.dataset, args.load_model)
+    # cmdec = Utils.revmodel_loader(
+    #     args.save_model_path, 'cmdec', args.dataset, args.load_model)
+
+    # audioenc = Utils.revmodel_loader(
+    #     args.save_model_path, 'audioenc', args.dataset, args.load_model)
+    # contAudenc = Utils.revmodel_loader(
+    #     args.save_model_path, 'contAudenc', args.dataset, args.load_model)
+    # cmdecAud = Utils.revmodel_loader(
+    #     args.save_model_path, 'cmdecAud', args.dataset, args.load_model)
+    # criterion = Utils.revmodel_loader(
+    #     args.save_model_path, 'criterion', args.dataset, args.load_model)
+
+    model = torch.load(args.emotioncheckpoint)
+    with torch.no_grad():
+        pAccs = emoeval(model=model,
+                        data_loader=test_loader,
+                        args=args)
+    print("Test: ACCs-F1s-WA-UWA-F1-val {}".format(pAccs))
+    # stop()
+    # Casestudy(wordenc, sentenc, contenc,cmdec, emodec,audioenc,contAudenc,cmdecAud, test_loader, emodict, args)
+    # record the test results
+    record_file = '{}/{}_{}_finetune?{}.txt'.format(
+        args.save_model_path, "record", args.dataset, str(args.load_model))
+    if os.path.isfile(record_file):
+        f_rec = open(record_file, "a")
+    else:
+        f_rec = open(record_file, "w")
+    f_rec.write("{} - {} - {}\t:\t{}\n".format(datetime.now(),
+                args.d_hidden_low, args.lr, pAccs))
+    f_rec.close()
+
+
+if __name__ == '__main__':
+    writer = SummaryWriter(log_dir="summary_pic")
+    # tensorboard --logdir=summary_pic
+    main()
