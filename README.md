@@ -20,28 +20,45 @@ Make sure the following dependencies are intalled.
 
 
 ## 💾 dataset
-- dataset 1
-- dataset 2
-- dataset 3
+- Unlabelled Multi-modal Dialogues. Our unlabelled multimodal dialogues data is collected from TV series Friends, namely UMD.  Table 2 shows the
+statistics of the unlabelled multi-modal dialogues data. ![Alt text](imgs/table2.png)
+- Muti-modal Emotion Pre-recognition Datasets. We evaluate
+our proposed approach TCMP on two multi-modal dialogue emotion datasets, namely P-IEM and P-MELD. 1) P-IEM comes from
+IEMOCAP[2]: A multimodal conversational dataset for emotion
+recognition, which includes nine classes: neutral, happy, sad, angry,
+frustrated, surprised, fear, disgusted and excited. 2) P-MELD comes
+from MELD [30]: A multimodal dataset for emotion recognition
+collected from the TV show Friends, which contains three coarsegrained classes: positive, neutral, negative. To adapt our emotion
+pre-recognition task, we reconstruct both datasets. The statistics summary of them are shown in Table 1.![Alt text](imgs/table1.png)
+
 
 ## 🚀 Quick start
-There are [] steps for training.
-- First,
-- Second,
-- Third,
-- Finally,
+There are two steps for training.
+- First, pretrain with UMD
+- Second, finetune with P-IEM and P-MELD
+- Third, evaluate the model 
 
 ### Download 
+- [Unlabelled Multi-modal Dialogues]()  
+- [P-IEM]()  
+- [P-MELD]() 
 
 
-### step 2
+<!-- ### step 2 -->
 
 
 ## 🏁 Experiment 
-
+![Alt text](imgs/table4.png)
 
 ## 📜Citation
 
+@inproceedings{ju2023real,  
+  title={Real-time Emotion Pre-Recognition in Conversations with Contrastive Multi-modal Dialogue Pre-training},  
+  author={Ju, Xincheng and Zhang, Dong and Zhu, Suyang and Li, Junhui and Li, Shoushan and Zhou, Guodong},  
+  booktitle={Proceedings of the 32nd ACM International Conference on Information and Knowledge Management},  
+  pages={1045--1055},  
+  year={2023}  
+}
 ## 🤘Furthermore
 
 if your have any quesions, you can just propose the confusion in issue window. We are honored to disscuss the problem with you!
