@@ -404,15 +404,15 @@ def main():
     parser.add_argument('-max_seq_len', type=int, default=60)
     parser.add_argument('-datatype', type=str, default='opsub')
     parser.add_argument('-dataMELD', type=str,
-                        default='/data1/xcju/project_6/Whole_dataset/MELD_pairs_2/mfc74_sp_pairs_')
+                        default='Whole_dataset/MELD_pairs_2/mfc74_sp_pairs_')
     # parser.add_argument('-dataMELD_emo', type=str,
     #                     default='/data/xcju/code/dataset/MELD_pairs/mfc74_sp_pairs_')
     parser.add_argument(
-        '-dataIEM', type=str, default='/data1/xcju/project_6/Whole_dataset/IEMOCAP_pairs_2/mfc74_sp_pairs_')
+        '-dataIEM', type=str, default='Whole_dataset/IEMOCAP_pairs_2/mfc74_sp_pairs_')
     parser.add_argument(
-        '-dataPre', type=str, default='/data1/xcju/project_6/Whole_dataset/movie_predata/pre_data_acl')
+        '-dataPre', type=str, default='Whole_dataset/movie_predata/pre_data_acl')
     parser.add_argument(
-        '-savePre', type=str, default='/data1/xcju/project_6/main_new_model/pre_MELD_IEM')
+        '-savePre', type=str, default='dataset/pre_MELD_IEM')
 
     opt = parser.parse_args()
 

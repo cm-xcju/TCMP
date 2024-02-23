@@ -28,13 +28,13 @@ def get_pretrain_args(parser):
     # data
     parser.add_argument('-dataset', type=str, default='movie',
                         help='dataset')
-    parser.add_argument('-savepath', type=str, default='/mnt/sda/xcju/project_6/dataset/pre_MELD_IEM',
+    parser.add_argument('-savepath', type=str, default='dataset/pre_MELD_IEM',
                         help='dataset')
-    parser.add_argument('-hubert', type=str, default='/mnt/sda/xcju/project_6/pretrain_checkpoints/Hubert/hubert-base-ls960',
+    parser.add_argument('-hubert', type=str, default='pretrain_checkpoints/Hubert/hubert-base-ls960',
                         help='dataset')
-    parser.add_argument('-roberta', type=str, default='/mnt/sda/xcju/project_6/pretrain_checkpoints/roberta-base',
+    parser.add_argument('-roberta', type=str, default='pretrain_checkpoints/roberta-base',
                         help='dataset')
-    parser.add_argument('-bert', type=str, default='/mnt/sda/xcju/project_6/pretrain_checkpoints/Bert',
+    parser.add_argument('-bert', type=str, default='pretrain_checkpoints/Bert',
                         help='dataset')
     parser.add_argument('-use_bert', action='store_true',
                         help='how many steps to report loss')
@@ -134,12 +134,12 @@ def get_train_args(parser):
                         help='how many steps to report loss')
     # data
     parser.add_argument('-datasource', type=str,
-                        default='/mnt/sda/xcju/project_6/dataset/pre_MELD_IEM', help='dataset')
-    parser.add_argument('-hubert', type=str, default='/mnt/sda/xcju/project_6/pretrain_checkpoints/Hubert/hubert-base-ls960',
+                        default='dataset/pre_MELD_IEM', help='dataset')
+    parser.add_argument('-hubert', type=str, default='pretrain_checkpoints/Hubert/hubert-base-ls960',
                         help='dataset')
-    parser.add_argument('-roberta', type=str, default='/mnt/sda/xcju/project_6/pretrain_checkpoints/roberta-base',
+    parser.add_argument('-roberta', type=str, default='pretrain_checkpoints/roberta-base',
                         help='dataset')
-    parser.add_argument('-bert', type=str, default='/mnt/sda/xcju/project_6/pretrain_checkpoints/Bert',
+    parser.add_argument('-bert', type=str, default='pretrain_checkpoints/Bert',
                         help='dataset')
     parser.add_argument('-use_bert', action='store_true',
                         help='how many steps to report loss')
