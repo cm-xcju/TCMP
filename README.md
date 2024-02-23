@@ -34,9 +34,10 @@ pre-recognition task, we reconstruct both datasets. The statistics summary of th
 
 ## 🚀 Quick start
 There are two steps for training.
-- First, pretrain with UMD
-- Second, finetune with P-IEM and P-MELD
-- Third, evaluate the model 
+- First, preprocess the dataset with : bash preprocess.sh . You can also used the provided data, which is already processed.
+- Second, pretrain with UMD: bash exec_scr.sh
+- Third, finetune with P-IEM and P-MELD : bash exec_emo.sh
+- Finally, evaluate the model 
 
 ### Download 
 - [download](https://www.alipan.com/s/E4m3NJaNhWH) code:  0l6q
